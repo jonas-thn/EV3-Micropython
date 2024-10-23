@@ -8,10 +8,11 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 ev3 = EV3Brick()
-touch = TouchSensor(Port.S1)
-motor = Motor(Port.A)
-color = ColorSensor(Port.S2)
+motorD = Motor(Port.D)
+motorA = Motor(Port.A)
 
-colorTuple = color.color()
-
-print(colorTuple)
+motorA.run(100)
+motorD.run(100)
+wait(5000)
+motorA.brake()
+motorD.brake()
