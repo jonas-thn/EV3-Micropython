@@ -20,16 +20,22 @@ scan_speed = 150
 color_values = {"GREEN": 90, "RED": 0, "BLUE":-90, "YELLOW": "END" }
 scan_color_list = []
 
-#----------------SCAN LOOP------------------#
-while(True):
-    forward(motorA, motorD, scan_speed)
-    scan_color = colorSens.color()
-    scan_color_list.append(colorSens.color())
-    print()
-    if (scan_color == None):
-        stop(motorA, motorD)
-        print(scan_color_list)
+move_speed = 300
 
-        break
-    wait(300)
+#----------------SCAN LOOP------------------#
+# while(True):
+#     forward(motorA, motorD, scan_speed, scan_speed)
+#     scan_color = colorSens.color()
+#     scan_color_list.append(colorSens.color())
+#     print(colorSens.rgb())
+#     if (scan_color == None):
+#         stop(motorA, motorD)
+#         # print(scan_color_list)
+#         break
+#     wait(300)
+
+
+move_middle(motorA, motorD, colorSens, move_speed)
+
+
 
