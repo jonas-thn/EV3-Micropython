@@ -17,10 +17,12 @@ gyro = GyroSensor(Port.S4)
 
 #------------GLOBAL ATTRIBUTES--------------#
 scan_speed = 150
+#right = 90, left = -90
 color_values = {"GREEN": 90, "RED": 0, "BLUE":-90, "YELLOW": "END" }
 scan_color_list = []
 
-move_speed = 300
+move_speed = 400
+turn_speed = 200
 
 #----------------SCAN LOOP------------------#
 # while(True):
@@ -35,7 +37,17 @@ move_speed = 300
 #     wait(300)
 
 
-move_middle(motorA, motorD, colorSens, move_speed)
-
-
+move_middle(motorA, motorD, colorSens, move_speed, 1)
+wait(100)
+left_turn(gyro, motorA, motorD, turn_speed, -90)
+wait(100)
+move_middle(motorA, motorD, colorSens, move_speed, -1)
+wait(100)
+right_turn(gyro, motorA, motorD, turn_speed, 90)
+move_middle(motorA, motorD, colorSens, move_speed, 1)
+wait(100)
+left_turn(gyro, motorA, motorD, turn_speed, -90)
+wait(100)
+move_middle(motorA, motorD, colorSens, move_speed, -1)
+wait(100)
 
