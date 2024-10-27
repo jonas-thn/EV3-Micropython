@@ -18,8 +18,10 @@ gyro = GyroSensor(Port.S4)
 #------------GLOBAL ATTRIBUTES--------------#
 scan_speed = 150
 #right = 90, left = -90
-color_values = {"GREEN": 90, "RED": 0, "BLUE":-90, "YELLOW": "END" }
-scan_color_list = []
+color_values = {"GREEN": 90, "BLUE":-90, }
+scan_color_list = [Color.GREEN, Color.RED, Color.RED, Color.BLUE, Color.BLUE, Color.RED,
+                    Color.GREEN, Color.RED, Color.BLUE, Color.RED, Color.GREEN,
+                    Color.RED, Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
 
 move_speed = 400
 turn_speed = 200
@@ -39,15 +41,34 @@ turn_speed = 200
 
 move_middle(motorA, motorD, colorSens, move_speed, 1)
 wait(100)
-left_turn(gyro, motorA, motorD, turn_speed, -90)
-wait(100)
-move_middle(motorA, motorD, colorSens, move_speed, -1)
-wait(100)
-right_turn(gyro, motorA, motorD, turn_speed, 90)
-move_middle(motorA, motorD, colorSens, move_speed, 1)
-wait(100)
-left_turn(gyro, motorA, motorD, turn_speed, -90)
-wait(100)
-move_middle(motorA, motorD, colorSens, move_speed, -1)
-wait(100)
+
+for i in range(len(scan_color_list)):
+    color = scan_color_list.pop(0)
+    print(gyro.angle)
+
+    if color == Color.RED:
+        move_middle(motorA, motorD, colorSens, move_speed, 1)
+        wait(100)
+
+    elif color == Color.GREEN:
+        angle = color_values["GREEN"]
+        right(turn_speed, gyro, motorD, motorA, 175, 30, 30)
+        wait(100)
+        move_middle(motorA, motorD, colorSens, move_speed, 1)
+        wait(100)
+
+    elif color == Color.BLUE:
+        angle = color_values["BLUE"]
+        left(turn_speed, gyro, motorD, motorA, 175, 30, 30)
+        wait(100)
+        move_middle(motorA, motorD, colorSens, move_speed, -1)
+        wait(100)
+
+    elif color == Color.YELLOW:
+        angle = color_values["YELLOW"]
+        stop(motorA, motorD)
+        break
+
+    
+
 

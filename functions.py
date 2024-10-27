@@ -5,6 +5,8 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
+glo_angle = 0
+
 def forward(motorA, motorD, speedA, speedD):
     motorA.run(speedA)
     motorD.run(speedD)
@@ -18,7 +20,7 @@ def move_middle(motorA, motorD, colorSens, move_speed, invert):
     d_speed = move_speed
     offset = 25
 
-    red_stop_delay = 250
+    red_stop_delay = 275
 
     while(True):
         forward(motorA, motorD, a_speed, d_speed)
@@ -40,36 +42,87 @@ def move_middle(motorA, motorD, colorSens, move_speed, invert):
             break
         wait(50)
 
-def right_turn(gyro, motorA, motorD, turn_speed, dest_angle):
-    if turn_speed > 0:
-        while(gyro.angle() < dest_angle):
-            motorA.run(-turn_speed)
-            motorD.run(turn_speed)
+# def right_turn(gyro, motorA, motorD, turn_speed, dest_angle):
+#     if turn_speed > 0:
+#         while(gyro.angle() < dest_angle):
+#             motorA.run(-turn_speed)
+#             motorD.run(turn_speed)
 
-        motorA.hold()
-        motorD.hold()
+#         motorA.hold()
+#         motorD.hold()
 
-        print(gyro.angle())
+#         if gyro.angle() > dest_angle:
+#             left_turn(gyro, motorA, motorD, turn_speed/4, dest_angle)
+#         else:
+#             correct_gyro(motorA, motorD, gyro.angle(), dest_angle, turn_speed/5)
+#             gyro.reset_angle(0)
 
-        if gyro.angle() > 91:
-            left_turn(gyro, motorA, motorD, turn_speed/4, dest_angle)
-        else:
-            gyro.reset_angle(0)
+# def left_turn(gyro, motorA, motorD, turn_speed, dest_angle):
+#     if turn_speed > 0:
+#         while(gyro.angle() > dest_angle):
+#             motorA.run(turn_speed)
+#             motorD.run(-turn_speed)
 
-def left_turn(gyro, motorA, motorD, turn_speed, dest_angle):
-    if turn_speed > 0:
-        while(gyro.angle() > dest_angle):
-            motorA.run(turn_speed)
-            motorD.run(-turn_speed)
+#         motorA.hold()
+#         motorD.hold()
 
-        motorA.hold()
-        motorD.hold()
+#         if gyro.angle() < -89:
+#             right_turn(gyro, motorA, motorD, turn_speed/4, dest_angle)
+#         else:
+#             correct_gyro(motorA, motorD, gyro.angle(), dest_angle, turn_speed/5)
 
-        print(gyro.angle())
+#             gyro.reset_angle(0)
 
-        if gyro.angle() < -91:
-            right_turn(gyro, motorA, motorD, turn_speed/4, dest_angle)
-        else:
-            gyro.reset_angle(0)
+# def correct_gyro(motorA, motorD, current_angle, desired_angle, turn_speed):
+#     if(current_angle == desired_angle):
+#         pass
+
+#     elif(current_angle > desired_angle):
+#         while(current_angle > desired_angle):
+#             motorA.run(turn_speed)
+#             motorD.run(-turn_speed)
+#         stop(motorA, motorD)
+
+#     elif(current_angle < desired_angle):
+#         while(current_angle > desired_angle):
+#             motorA.run(-turn_speed)
+#             motorD.run(turn_speed)
+#         stop(motorA, motorD)
+
+#     wait(100)
+
+def left(speed, gyro, motorD, motorA, wait, angle_smooth, smooth_speed):
+    global glo_angle 
+    glo_angle -= 90
+    wait(wait)
+    motorD.run(-speed)
+    motorA.run(speed)
+    while(gyro.angle() > glo_angle+angle_smooth):
+        pass
+    motorD.run(-smooth_speed)
+    motorA.run(smooth_speed)
+    while(gyro.angle() > glo_angle):
+        pass
+    motorA.hold()
+    motorD.hold()
+    wait(wait)
+
+
+def right(speed, gyro, motorD, motorA, wait, angle_smooth, smooth_speed):
+    global glo_angle
+    glo_angle += 90
+    wait(wait)
+    motorD.run(speed)
+    motorA.run(-speed)
+    while(gyro.angle() < glo_angle-angle_smooth):
+        pass
+    motorD.run(smooth_speed)
+    motorA.run(-smooth_speed)
+    while(gyro.angle() < glo_angle):
+        pass
+    motorA.hold()
+    motorD.hold()
+    wait(wait)
+
 
 
