@@ -5,17 +5,18 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
-glo_angle = 0
+global_angle = 0
 
-def forward(motorA, motorD, speedA, speedD):
-    motorA.run(speedA)
-    motorD.run(speedD)
+def forward(motorA, motorD, speedA, speedD, gyro):
+    global global_angle
+    motorD.run(speedD - 10*(gyro.angle()-global_angle))
+    motorA.run(speedA + 10*(gyro.angle()-global_angle))
 
 def stop(motorA, motorD):
     motorA.brake()
     motorD.brake()
 
-def move_middle(motorA, motorD, colorSens, move_speed, invert):
+def move_middle(motorA, motorD, colorSens, move_speed, invert, gyro):
     a_speed = move_speed
     d_speed = move_speed
     offset = 25
@@ -23,7 +24,7 @@ def move_middle(motorA, motorD, colorSens, move_speed, invert):
     red_stop_delay = 275
 
     while(True):
-        forward(motorA, motorD, a_speed, d_speed)
+        forward(motorA, motorD, a_speed, d_speed, gyro)
         scan_rgb = colorSens.rgb()
         average = (scan_rgb[0] + scan_rgb[1] + scan_rgb[2]) / 3
         if(average > 60):
@@ -91,38 +92,36 @@ def move_middle(motorA, motorD, colorSens, move_speed, invert):
 
 #     wait(100)
 
-def left(speed, gyro, motorD, motorA, wait, angle_smooth, smooth_speed):
-    global glo_angle 
-    glo_angle -= 90
-    wait(wait)
+def left(speed, gyro, motorD, motorA, wait_seconds, angle_smooth, smooth_speed):
+    global global_angle 
+    global_angle -= 90
+    wait(wait_seconds)
     motorD.run(-speed)
     motorA.run(speed)
-    while(gyro.angle() > glo_angle+angle_smooth):
+    while(gyro.angle() > global_angle+angle_smooth):
         pass
     motorD.run(-smooth_speed)
     motorA.run(smooth_speed)
-    while(gyro.angle() > glo_angle):
+    while(gyro.angle() > global_angle):
         pass
     motorA.hold()
     motorD.hold()
-    wait(wait)
+    wait(wait_seconds)
 
 
-def right(speed, gyro, motorD, motorA, wait, angle_smooth, smooth_speed):
-    global glo_angle
-    glo_angle += 90
-    wait(wait)
+def right(speed, gyro, motorD, motorA, wait_seconds, angle_smooth, smooth_speed):
+    global global_angle
+    global_angle += 90
+    wait(wait_seconds)
     motorD.run(speed)
     motorA.run(-speed)
-    while(gyro.angle() < glo_angle-angle_smooth):
+    while(gyro.angle() < global_angle-angle_smooth):
         pass
     motorD.run(smooth_speed)
     motorA.run(-smooth_speed)
-    while(gyro.angle() < glo_angle):
+    while(gyro.angle() < global_angle):
         pass
     motorA.hold()
     motorD.hold()
-    wait(wait)
-
-
+    wait(wait_seconds)
 

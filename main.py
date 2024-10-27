@@ -39,33 +39,33 @@ turn_speed = 200
 #     wait(300)
 
 
-move_middle(motorA, motorD, colorSens, move_speed, 1)
+move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
 wait(100)
 
+#-------------NAVIGATION LOOP---------------#
 for i in range(len(scan_color_list)):
     color = scan_color_list.pop(0)
     print(gyro.angle)
 
     if color == Color.RED:
-        move_middle(motorA, motorD, colorSens, move_speed, 1)
+        move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
         wait(100)
 
     elif color == Color.GREEN:
-        angle = color_values["GREEN"]
+        # angle = color_values["GREEN"]
         right(turn_speed, gyro, motorD, motorA, 175, 30, 30)
         wait(100)
-        move_middle(motorA, motorD, colorSens, move_speed, 1)
+        move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
         wait(100)
 
     elif color == Color.BLUE:
-        angle = color_values["BLUE"]
+        # angle = color_values["BLUE"]
         left(turn_speed, gyro, motorD, motorA, 175, 30, 30)
         wait(100)
-        move_middle(motorA, motorD, colorSens, move_speed, -1)
+        move_middle(motorA, motorD, colorSens, move_speed, -1, gyro)
         wait(100)
 
     elif color == Color.YELLOW:
-        angle = color_values["YELLOW"]
         stop(motorA, motorD)
         break
 
