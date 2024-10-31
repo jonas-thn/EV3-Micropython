@@ -19,33 +19,42 @@ gyro = GyroSensor(Port.S4)
 scan_speed = 150
 #right = 90, left = -90
 color_values = {"GREEN": 90, "BLUE":-90, }
-scan_color_list = [Color.GREEN, Color.RED, Color.RED, Color.BLUE, Color.BLUE, Color.RED,
-                    Color.GREEN, Color.RED, Color.BLUE, Color.RED, Color.GREEN,
-                    Color.RED, Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
+# scan_color_list = [Color.GREEN, Color.RED, Color.RED, Color.BLUE, Color.BLUE, Color.RED,
+#                     Color.GREEN, Color.RED, Color.BLUE, Color.RED, Color.GREEN,
+#                     Color.RED, Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
+scan_color_list = []
 
 move_speed = 400
 turn_speed = 200
 
-#----------------SCAN LOOP------------------#
-# while(True):
-#     forward(motorA, motorD, scan_speed, scan_speed)
-#     scan_color = colorSens.color()
-#     scan_color_list.append(colorSens.color())
-#     print(colorSens.rgb())
-#     if (scan_color == None):
-#         stop(motorA, motorD)
-#         # print(scan_color_list)
-#         break
-#     wait(300)
+while(True):
+    forward(motorA, motorD, scan_speed, scan_speed, gyro)
 
+    wait(150)
+    color = colorSens.color()
+    if color == Color.GREEN:
+        break
+    # elif color == Color.BLUE:
+    #     break
+    # elif color == Color.RED:
+    #     break
+
+#----------------SCAN LOOP------------------#
+while(True):
+    forward(motorA, motorD, scan_speed, scan_speed, gyro)
+    scan_color = colorSens.color()
+    scan_color_list.append(colorSens.color())
+    if (scan_color == Color.YELLOW):
+        break
+    wait(315)
 
 move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
 wait(100)
+print(scan_color_list)
 
-#-------------NAVIGATION LOOP---------------#
+# #-------------NAVIGATION LOOP---------------#
 for i in range(len(scan_color_list)):
     color = scan_color_list.pop(0)
-    print(gyro.angle)
 
     if color == Color.RED:
         move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
@@ -58,7 +67,7 @@ for i in range(len(scan_color_list)):
         move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
         wait(100)
 
-    elif color == Color.BLUE:
+    elif color == Color.BLUE or color == Color.BLACK:
         # angle = color_values["BLUE"]
         left(turn_speed, gyro, motorD, motorA, 175, 30, 30)
         wait(100)
