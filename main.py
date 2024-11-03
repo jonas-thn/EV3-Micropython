@@ -24,8 +24,12 @@ color_values = {"GREEN": 90, "BLUE":-90, }
 #                     Color.RED, Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
 scan_color_list = []
 
-move_speed = 400
-turn_speed = 200
+move_speed = 585
+turn_speed = 280
+smooth_angle = 20
+smooth_speed = 40
+red_stop = 125
+global_wait = 60
 
 while(True):
     forward(motorA, motorD, scan_speed, scan_speed, gyro)
@@ -36,20 +40,20 @@ while(True):
         break
     # elif color == Color.BLUE:
     #     break
-    # elif color == Color.RED:
-    #     break
+    elif color == Color.RED:
+        break
 
 #----------------SCAN LOOP------------------#
 while(True):
     forward(motorA, motorD, scan_speed, scan_speed, gyro)
     scan_color = colorSens.color()
-    scan_color_list.append(colorSens.color())
+    scan_color_list.append(scan_color)
     if (scan_color == Color.YELLOW):
         break
     wait(315)
 
-move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
-wait(100)
+move_middle(motorA, motorD, colorSens, move_speed, 1, gyro, red_stop)
+wait(global_wait)
 print(scan_color_list)
 
 # #-------------NAVIGATION LOOP---------------#
@@ -57,22 +61,22 @@ for i in range(len(scan_color_list)):
     color = scan_color_list.pop(0)
 
     if color == Color.RED:
-        move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
-        wait(100)
+        move_middle(motorA, motorD, colorSens, move_speed, 1, gyro, red_stop)
+        wait(global_wait)
 
     elif color == Color.GREEN:
         # angle = color_values["GREEN"]
-        right(turn_speed, gyro, motorD, motorA, 175, 30, 30)
-        wait(100)
-        move_middle(motorA, motorD, colorSens, move_speed, 1, gyro)
-        wait(100)
+        right(turn_speed, gyro, motorD, motorA, 175, smooth_angle, smooth_speed)
+        wait(global_wait)
+        move_middle(motorA, motorD, colorSens, move_speed, 1, gyro, red_stop)
+        wait(global_wait)
 
     elif color == Color.BLUE or color == Color.BLACK:
         # angle = color_values["BLUE"]
-        left(turn_speed, gyro, motorD, motorA, 175, 30, 30)
-        wait(100)
-        move_middle(motorA, motorD, colorSens, move_speed, -1, gyro)
-        wait(100)
+        left(turn_speed, gyro, motorD, motorA, 175, smooth_angle, smooth_speed)
+        wait(global_wait)
+        move_middle(motorA, motorD, colorSens, move_speed, -1, gyro, red_stop)
+        wait(global_wait)
 
     elif color == Color.YELLOW:
         stop(motorA, motorD)

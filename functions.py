@@ -16,12 +16,12 @@ def stop(motorA, motorD):
     motorA.brake()
     motorD.brake()
 
-def move_middle(motorA, motorD, colorSens, move_speed, invert, gyro):
+def move_middle(motorA, motorD, colorSens, move_speed, invert, gyro, _red_stop_delay):
     a_speed = move_speed
     d_speed = move_speed
-    offset = 25
+    offset = 0
 
-    red_stop_delay = 275
+    red_stop_delay = _red_stop_delay
 
     while(True):
         forward(motorA, motorD, a_speed, d_speed, gyro)
