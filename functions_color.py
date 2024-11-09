@@ -5,6 +5,9 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
+if __name__ == "__main__":
+    raise SystemExit("Wrong file!")
+
 global_angle = 0
 
 def forward(motorA, motorD, speedA, speedD, gyro):
@@ -13,35 +16,37 @@ def forward(motorA, motorD, speedA, speedD, gyro):
     motorA.run(speedA + 10*(gyro.angle()-global_angle))
 
 def stop(motorA, motorD):
-    motorA.brake()
-    motorD.brake()
+    motorA.hold()
+    motorD.hold()
 
 def move_middle(motorA, motorD, colorSens, move_speed, invert, gyro, _red_stop_delay):
     a_speed = move_speed
     d_speed = move_speed
-    offset = 0
+    offset = 10
 
     red_stop_delay = _red_stop_delay
 
     while(True):
         forward(motorA, motorD, a_speed, d_speed, gyro)
-        scan_rgb = colorSens.rgb()
-        average = (scan_rgb[0] + scan_rgb[1] + scan_rgb[2]) / 3
-        if(average > 60):
-            d_speed = move_speed - 2*offset * invert
-        elif(average > 40):
-            d_speed = move_speed - offset * invert
-        elif(average < 20):
-            a_speed = move_speed - offset * invert
-        else:
-            a_speed = move_speed
-            d_speed = move_speed
 
-        if(colorSens.color() == Color.RED):
-            wait(red_stop_delay)
-            stop(motorA, motorD)
-            break
-        wait(50)
+        #scan graue streifen
+        # scan_rgb = colorSens.rgb()
+        # average = (scan_rgb[0] + scan_rgb[1] + scan_rgb[2]) / 3
+        # if(average > 60):
+        #     d_speed = move_speed - 2*offset * invert
+        # elif(average > 40):
+        #     d_speed = move_speed - offset * invert
+        # elif(average < 20):
+        #     a_speed = move_speed - offset * invert
+        # else:
+        #     a_speed = move_speed
+        #     d_speed = move_speed
+
+        # if(colorSens.color() == Color.RED):
+        #     wait(red_stop_delay)
+        #     stop(motorA, motorD)
+        #     break
+        # wait(50)
 
 # def right_turn(gyro, motorA, motorD, turn_speed, dest_angle):
 #     if turn_speed > 0:
@@ -95,7 +100,7 @@ def move_middle(motorA, motorD, colorSens, move_speed, invert, gyro, _red_stop_d
 def left(speed, gyro, motorD, motorA, wait_seconds, angle_smooth, smooth_speed):
     global global_angle 
     global_angle -= 90
-    wait(wait_seconds)
+    wait(wait_seconds / 2)
     motorD.run(-speed)
     motorA.run(speed)
     while(gyro.angle() > global_angle+angle_smooth):
@@ -106,13 +111,13 @@ def left(speed, gyro, motorD, motorA, wait_seconds, angle_smooth, smooth_speed):
         pass
     motorA.hold()
     motorD.hold()
-    wait(wait_seconds)
+    wait(wait_seconds / 2)
 
 
 def right(speed, gyro, motorD, motorA, wait_seconds, angle_smooth, smooth_speed):
     global global_angle
     global_angle += 90
-    wait(wait_seconds)
+    wait(wait_seconds / 2)
     motorD.run(speed)
     motorA.run(-speed)
     while(gyro.angle() < global_angle-angle_smooth):
@@ -123,5 +128,5 @@ def right(speed, gyro, motorD, motorA, wait_seconds, angle_smooth, smooth_speed)
         pass
     motorA.hold()
     motorD.hold()
-    wait(wait_seconds)
+    wait(wait_seconds / 2)
 
