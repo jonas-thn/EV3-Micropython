@@ -17,27 +17,27 @@ motorD = Motor(Port.D)
 motroA = Motor(Port.A)
 motorHead = Motor(Port.C)
 
-distance_front = 201
-distance_side = 127
+distance_front = 160
+distance_side = 130
 
 move_spped = 575
 turn_speed = 350
 smooth_speed = 20
 global_wait = 175
-head_rotation_angle = 1000
+head_rotation_speed = 1000
 
 block = 655
 
 def start():
     gyro.reset_angle(0)
 
-    motorHead.run_angle(head_rotation_angle, 180)
+    motorHead.run_angle(head_rotation_speed, 180)
     motorHead.hold
     wait(global_wait)
     dis_h = ultraSens.distance()
     while(dis_h - ultraSens.distance() <= 8):
         pass
-    motorHead.run_angle(head_rotation_angle, -180)
+    motorHead.run_angle(head_rotation_speed, -180)
     motorHead.hold()
     wait(global_wait)
 
@@ -55,7 +55,7 @@ def loop():
             wait(10)
             motorD.brake()
             motroA.brake()
-            look_around(head_rotation_angle, ultraSens, distance_side, motorHead, move_spped, turn_speed, smooth_speed, block, gyro, motorD, motroA, global_wait)
+            look_around(head_rotation_speed, ultraSens, distance_side, motorHead, move_spped, turn_speed, smooth_speed, block, gyro, motorD, motroA, global_wait)
             
 def main():
     start()
